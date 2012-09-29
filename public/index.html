@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Sky &amp; D3.js Demo</title>
+    
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/sky-d3-demo.css" media="screen" rel="stylesheet" type="text/css"/>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script src="/js/d3.v2.js"></script>
+    <script src="/js/sankey.js"></script>
+  </head>
+
+  <body>
+    <div class="jumbotron subhead">
+      <div class="container">
+      <div class="row">
+        <h1>GitHub <span style="color:#C60000">Archive</span> Visualizer</h1>
+        <p class="lead">Use the interactive visualization below to view the
+          paths that GitHub users take.</p>
+      </div>
+      </div>
+    </div>
+    
+    <div class="container">
+      <div class="row">
+        <p id="chart">
+      </div>
+
+      <div class="row">
+        <h3>Instructions:</h3>
+        <ol>
+          <li>Select a starting event. This is where the path analysis begins.</li>
+          <li>Next, click through the graph to see what actions users did next.</li>
+        </ol>
+      </div>
+
+      <div class="row">
+        <h3>Thanks and Disclaimers</h3>
+        <p>Many thanks to the D3.js project for great visualization tools and
+          to the GitHub Archive for making this historic data freely available.
+          The Sky project is not in any way associated with D3, GitHub or the
+          GitHub Archive.</p>
+      </div>
+    </div>
+  </body>
+
+  <script src="/js/sky-d3-demo.js"></script>
+
+</html>

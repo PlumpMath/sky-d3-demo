@@ -1,0 +1,25 @@
+PATH
+  remote: /projects/skydb/sky.rb
+  specs:
+    skydb (0.1.0)
+      msgpack (~> 0.4.7)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    msgpack (0.4.7)
+    rack (1.4.1)
+    rack-protection (1.2.0)
+      rack
+    sinatra (1.3.3)
+      rack (~> 1.3, >= 1.3.6)
+      rack-protection (~> 1.2)
+      tilt (~> 1.3, >= 1.3.3)
+    tilt (1.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  sinatra (~> 1.3.3)
+  skydb!
