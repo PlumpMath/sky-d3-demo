@@ -21,24 +21,24 @@ class SkyD3Demo < Sinatra::Base
   end
 
   # Retrieve a hash of next steps given an array of property ids.
-  get '/next_events' do
+  get '/next_actions' do
     # Get list of property ids from client.
-    property_ids = params[:propertyIds].split(/,/)
+    action_ids = params[:actionIds].split(/,/).map {|x| x.to_i}
   
     # Generate query for Sky.
     query = <<-BLOCK
       // The result type to return to the client.
       [Hashable("actionId")]
       [Serializable]
-      public class Result {
+      class Result {
         public Int actionId;
         public Int count;
       }
     
       // Main program.
-      Int targetActionId = #{property_ids[0].to_i};
+      Int targetActionId = #{action_ids[0]};
       Int previousActionId;
-      Cursor cursor = path.events;
+      Cursor cursor = path.events();
       for each (Event event in cursor) {
         // If the last action was our target then add a count
         // for the current action.
@@ -53,7 +53,11 @@ class SkyD3Demo < Sinatra::Base
 
       return;
     BLOCK
-  
+
+    # Setup the client
+    SkyDB.database = 'gharchive'
+    SkyDB.table = 'users'
+
     # Run query once against each path in the database.
     result = SkyDB.peach(query)
   
