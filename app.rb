@@ -1,4 +1,10 @@
+require "sinatra/reloader"
+
 class SkyD3Demo < Sinatra::Base
+  configure :development do
+    register Sinatra::Reloader
+  end
+
   #############################################################################
   #
   # Initialization
@@ -15,14 +21,14 @@ class SkyD3Demo < Sinatra::Base
   #
   #############################################################################
 
-  # Redirect root to index.html
   get '/' do
-    redirect '/index.html'
+    @actions = SkyDB.aall()['actions']
+    erb :index
   end
 
-  # Retrieve a hash of next steps given an array of property ids.
+  # Retrieve an array of next steps given an array of action ids.
   get '/next_actions' do
-    # Get list of property ids from client.
+    # Get list of action ids from client.
     action_ids = params[:actionIds].split(/,/).map {|x| x.to_i}
   
     # Generate query for Sky.
