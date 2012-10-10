@@ -30,7 +30,7 @@ class SkyD3Demo < Sinatra::Base
   get '/next_actions' do
     # Get list of action ids from client.
     action_ids = params[:actionIds].split(/,/).map {|x| x.to_i}
-  
+    
     # Generate query for Sky.
     query = <<-BLOCK
       // The result type to return to the client.
@@ -42,19 +42,29 @@ class SkyD3Demo < Sinatra::Base
       }
     
       // Main program.
-      Int targetActionId = #{action_ids[0]};
-      Int previousActionId;
+      Int targetActionId1 = #{action_ids[0] || 0};
+      Int targetActionId2 = #{action_ids[1] || 0};
+      Int targetActionId3 = #{action_ids[2] || 0};
+      Int previousActionId1;
+      Int previousActionId2;
+      Int previousActionId3;
+      
       Cursor cursor = path.events();
       for each (Event event in cursor) {
         // If the last action was our target then add a count
         // for the current action.
-        if(previousActionId == targetActionId) {
+        if(previousActionId1 == targetActionId1 && 
+           (targetActionId2 == 0 || previousActionId2 == targetActionId2) &&
+           (targetActionId3 == 0 || previousActionId3 == targetActionId3))
+        {
           Result item = data.get(event.actionId);
           item.count = item.count + 1;
         }
       
-        // Keep track of the previous action.
-        previousActionId = event.actionId;
+        // Keep track of the previous actions.
+        previousActionId3 = previousActionId2;
+        previousActionId2 = previousActionId1;
+        previousActionId1 = event.actionId;
       }
 
       return;

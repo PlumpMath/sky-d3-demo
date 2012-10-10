@@ -3,7 +3,7 @@
 }
 
 .node rect {
-  cursor: move;
+  cursor: hand;
   fill-opacity: .9;
   shape-rendering: crispEdges;
 }

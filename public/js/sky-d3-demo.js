@@ -40,18 +40,32 @@
     // Chart Functions
     //--------------------------------------------------------------------------
 
-    function loadChart(rootActionId) {
-        d3.json("/next_actions?actionIds=" + rootActionId,
+    function loadChart(rootActionIds) {
+        d3.json("/next_actions?actionIds=" + rootActionIds.join(","),
             function draw(data) {
                 $("#chart svg g").empty();
                 
-                var root = {level:0, actionId:rootActionId, name:getAction(rootActionId).name};
-                var nodes = [root];
-                var links = [];
-                
+                // Calculate total count.
+                var totalCount = 0;
                 for(var i=0; i<data.length; i++) {
-                    var n = {level:1, actionId:data[i].actionId, name:getAction(data[i].actionId).name};
-                    var l = {source:0, target:nodes.length, value:data[i].count};
+                    totalCount += data[i].count;
+                }
+                
+                // Generate root nodes and links.
+                var links = [];
+                var roots = [];
+                for(var i=0; i<rootActionIds.length; i++) {
+                    roots.push({level:0, actionId:rootActionIds[i], name:getAction(rootActionIds[i]).name});
+                    if(i > 0) {
+                        links.push({source:i-1, target:i, value:totalCount});
+                    }
+                }
+                var nodes = roots.slice();
+                
+                // Generate leaf nodes and links.
+                for(var i=0; i<data.length; i++) {
+                    var n = {level:roots.length, actionId:data[i].actionId, name:getAction(data[i].actionId).name};
+                    var l = {source:(roots.length-1), target:nodes.length, value:data[i].count};
                     nodes.push(n);
                     links.push(l);
                 }
@@ -76,10 +90,9 @@
                     .enter().append("g")
                     .attr("class", "node")
                     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-                    .call(d3.behavior.drag()
-                    .origin(function(d) { return d; })
-                    .on("dragstart", function() { this.parentNode.appendChild(this); })
-                    .on("drag", dragmove));
+                    .on("click", function(d, i) {
+                        loadChart(rootActionIds.concat(d.actionId));
+                    });
 
                 node.append("rect")
                     .attr("height", function(d) { return d.dy; })
@@ -109,7 +122,8 @@
         );
     }
     
-    loadChart($("#initialAction").val());
+    loadChart([$("#initialAction").val()]);
+
 
     //--------------------------------------------------------------------------
     // Action Functions
@@ -132,6 +146,6 @@
 
     // Reset the display when a new initial event is selected.
     $("#initialAction").on("change", function(event) {
-        loadChart($("#initialAction").val());
+        loadChart([$("#initialAction").val()]);
     });
 })();
