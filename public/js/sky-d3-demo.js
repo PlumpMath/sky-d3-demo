@@ -46,11 +46,11 @@
             return;
         }
         
-        updateBreadcrumb(rootActionIds, true);
+        //updateBreadcrumb(rootActionIds, true);
         
         d3.json("/next_actions?actionIds=" + rootActionIds.join(","),
             function draw(data) {
-                updateBreadcrumb(rootActionIds, false);
+                //updateBreadcrumb(rootActionIds, false);
                 $("#chart svg g").empty();
                 
                 // Calculate total count.
