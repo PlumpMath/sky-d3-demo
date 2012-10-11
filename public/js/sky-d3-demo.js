@@ -41,8 +41,16 @@
     //--------------------------------------------------------------------------
 
     function loadChart(rootActionIds) {
+        if(rootActionIds.length > 3) {
+            alert("This demo only allows 3 levels of drill-down.");
+            return;
+        }
+        
+        updateBreadcrumb(rootActionIds, true);
+        
         d3.json("/next_actions?actionIds=" + rootActionIds.join(","),
             function draw(data) {
+                updateBreadcrumb(rootActionIds, false);
                 $("#chart svg g").empty();
                 
                 // Calculate total count.
@@ -55,7 +63,7 @@
                 var links = [];
                 var roots = [];
                 for(var i=0; i<rootActionIds.length; i++) {
-                    roots.push({level:0, actionId:rootActionIds[i], name:getAction(rootActionIds[i]).name});
+                    roots.push({level:0, isRoot:true, targetActionIds:rootActionIds.slice(0, i+1), actionId:rootActionIds[i], name:getAction(rootActionIds[i]).name});
                     if(i > 0) {
                         links.push({source:i-1, target:i, value:totalCount});
                     }
@@ -64,7 +72,7 @@
                 
                 // Generate leaf nodes and links.
                 for(var i=0; i<data.length; i++) {
-                    var n = {level:roots.length, actionId:data[i].actionId, name:getAction(data[i].actionId).name};
+                    var n = {level:roots.length, targetActionIds:rootActionIds.concat(data[i].actionId), actionId:data[i].actionId, name:getAction(data[i].actionId).name};
                     var l = {source:(roots.length-1), target:nodes.length, value:data[i].count};
                     nodes.push(n);
                     links.push(l);
@@ -91,7 +99,7 @@
                     .attr("class", "node")
                     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
                     .on("click", function(d, i) {
-                        loadChart(rootActionIds.concat(d.actionId));
+                        loadChart(d.targetActionIds);
                     });
 
                 node.append("rect")
@@ -124,6 +132,38 @@
     
     loadChart([$("#initialAction").val()]);
 
+
+    //--------------------------------------------------------------------------
+    // Breadcrumb
+    //--------------------------------------------------------------------------
+    
+    function updateBreadcrumb(actionIds, loading)
+    {
+        if(actionIds.length == 0) return;
+        
+        var html = "";
+        for(var i=0; i<actionIds.length; i++) {
+            var action = getAction(actionIds[i]);
+            if(i < actionIds.length - 1) {
+                html += "<li><a data-action-ids=\"[" + actionIds.slice(0, i+1).join(",") + "]\" href=\"#\">" + action.name + "</a> <span class=\"divider\">&gt;</span></li>";
+            }
+            else {
+                html += "<li class=\"active\">" + action.name + "</li>";
+            }
+        }
+
+        if(loading) {
+            html += "<li class=\"active pull-right\">...</li>";
+        }
+        
+        $(".breadcrumb").html(html);
+    }
+
+    $(".breadcrumb").on("click", "li a", function(event) {
+        loadChart($(this).data("actionIds"));
+        return false;
+    });
+    
 
     //--------------------------------------------------------------------------
     // Action Functions
