@@ -144,6 +144,7 @@
         var html = "";
         for(var i=0; i<actionIds.length; i++) {
             var action = getAction(actionIds[i]);
+            
             if(i < actionIds.length - 1) {
                 html += "<li><a data-action-ids=\"[" + actionIds.slice(0, i+1).join(",") + "]\" href=\"#\">" + action.name + "</a> <span class=\"divider\">&gt;</span></li>";
             }
@@ -189,3 +190,5 @@
         loadChart([$("#initialAction").val()]);
     });
 })();
+
+$('.dropdown-toggle').dropdown();
