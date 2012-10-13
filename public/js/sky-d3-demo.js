@@ -41,22 +41,25 @@
     //--------------------------------------------------------------------------
 
     function loadChart(rootActionIds) {
+        /*
         if(rootActionIds.length > 3) {
             alert("This demo only allows 3 levels of drill-down.");
             return;
         }
+        */
         
         //updateBreadcrumb(rootActionIds, true);
         
-        d3.json("/next_actions?actionIds=" + rootActionIds.join(","),
+        d3.json("/next_action?actionIds=" + rootActionIds.join(","),
             function draw(data) {
                 //updateBreadcrumb(rootActionIds, false);
                 $("#chart svg g").empty();
+                var results = data.data;
                 
                 // Calculate total count.
                 var totalCount = 0;
-                for(var i=0; i<data.length; i++) {
-                    totalCount += data[i].count;
+                for(var key in results) {
+                    totalCount += results[key].count;
                 }
                 
                 // Generate root nodes and links.
@@ -71,9 +74,11 @@
                 var nodes = roots.slice();
                 
                 // Generate leaf nodes and links.
-                for(var i=0; i<data.length; i++) {
-                    var n = {level:roots.length, targetActionIds:rootActionIds.concat(data[i].actionId), actionId:data[i].actionId, name:getAction(data[i].actionId).name};
-                    var l = {source:(roots.length-1), target:nodes.length, value:data[i].count};
+                for(var key in results) {
+                    var actionId = parseInt(key);
+                    var count = results[key].count;
+                    var n = {level:roots.length, targetActionIds:rootActionIds.concat(actionId), actionId:actionId, name:getAction(actionId).name};
+                    var l = {source:(roots.length-1), target:nodes.length, value:count};
                     nodes.push(n);
                     links.push(l);
                 }
