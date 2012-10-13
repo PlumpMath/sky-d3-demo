@@ -41,13 +41,6 @@
     //--------------------------------------------------------------------------
 
     function loadChart(rootActionIds) {
-        /*
-        if(rootActionIds.length > 3) {
-            alert("This demo only allows 3 levels of drill-down.");
-            return;
-        }
-        */
-        
         //updateBreadcrumb(rootActionIds, true);
         
         d3.json("/next_action?actionIds=" + rootActionIds.join(","),
