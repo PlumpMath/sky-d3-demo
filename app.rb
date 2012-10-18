@@ -23,6 +23,7 @@ class SkyD3Demo < Sinatra::Base
 
   get '/' do
     @actions = SkyDB.aall()['actions']
+    @actions.sort_by! {|action| action[:name]}
     erb :index
   end
 

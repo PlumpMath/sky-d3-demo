@@ -160,7 +160,7 @@ begin
         Yajl::Parser.parse(content) do |json|
           actor, actor_id, data = extract(json)
 
-          puts "#{'%07d' % event_count} [#{json['type']}]: #{actor}"
+          #puts "#{'%07d' % event_count} [#{json['type']}]: #{actor}"
     
           # Add action if it doesn't exist.
           if !$actions.has_key?(json['type'])
@@ -187,6 +187,7 @@ begin
   end
 
 rescue => e
+  puts "Saving state after error. Rerun from last successful date to append."
   save_state()
   raise e
 end
