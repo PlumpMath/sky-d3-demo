@@ -1,7 +1,7 @@
 sky-d3-demo
 ===========
 
-### Overview
+## Overview
 
 An interactive data visualization using D3.js and the Sky database.
 For more information on this demo, read the blog post:
@@ -11,7 +11,7 @@ For more information on this demo, read the blog post:
 If you have any problems setting it up, add an Issue to the GitHub page.
 
 
-### Installation
+## Installation
 
 To install, you'll need:
 
