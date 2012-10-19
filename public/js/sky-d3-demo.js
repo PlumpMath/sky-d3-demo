@@ -43,7 +43,7 @@
     function loadChart(rootActionIds) {
         //updateBreadcrumb(rootActionIds, true);
         
-        d3.json("/next_action?actionIds=" + rootActionIds.join(","),
+        d3.json("/next_actions?actionIds=" + rootActionIds.join(","),
             function draw(data) {
                 //updateBreadcrumb(rootActionIds, false);
                 $("#chart svg g").empty();
